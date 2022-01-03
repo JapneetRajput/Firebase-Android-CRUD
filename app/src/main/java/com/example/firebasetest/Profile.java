@@ -1,6 +1,9 @@
 package com.example.firebasetest;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
@@ -8,48 +11,53 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Profile extends AppCompatActivity {
 
-    EditText name,address,number;
-    Button submit;
-
+    RecyclerView recyclerView;
     FirebaseDatabase db = FirebaseDatabase.getInstance();
     DatabaseReference reference = db.getReference().child("Users");
+
+    Adapter adapter;
+    ArrayList<Model> list;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        name = findViewById(R.id.nameEt);
-        number = findViewById(R.id.number_Et);
-        address = findViewById(R.id.addressEt);
-        submit = findViewById(R.id.button2);
+        recyclerView = findViewById(R.id.recycler);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        submit.setOnClickListener(new View.OnClickListener() {
+        list = new ArrayList<>();
+        adapter = new Adapter(list,this);
+        recyclerView.setAdapter(adapter);
+
+        reference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onClick(View v) {
-                String Name = name.getText().toString();
-                String Number = number.getText().toString();
-                String Address = address.getText().toString();
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot: snapshot.getChildren()){
+                    Model model = dataSnapshot.getValue(Model.class);
+                    list.add(model);
+                }
+                adapter.notifyDataSetChanged();
+            }
 
-                HashMap<String,String> userMap = new HashMap<>();
-                userMap.put("Name", Name);
-                userMap.put("Address", Address);
-                userMap.put("Number", Number);
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-                reference.push().setValue(userMap);
-
-                Toast.makeText(Profile.this, "Details uploaded!", Toast.LENGTH_SHORT).show();
-                name.setText("");
-                number.setText("");
-                address.setText("");
             }
         });
+
 
     }
 }

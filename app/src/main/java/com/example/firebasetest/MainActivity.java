@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.firebasetest.databinding.ActivityMainBinding;
@@ -20,10 +22,19 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
+
+    EditText name,address,number;
+    Button submit;
+
+    FirebaseDatabase db = FirebaseDatabase.getInstance();
+    DatabaseReference reference = db.getReference().child("Users");
 
     private ActivityMainBinding binding;
 
@@ -43,6 +54,27 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        name = findViewById(R.id.nameEt);
+        number = findViewById(R.id.phoneEt);
+        address = findViewById(R.id.addressEt);
+        submit = findViewById(R.id.phoneContinueBtn);
+
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String Name = name.getText().toString();
+                String Number = number.getText().toString();
+                String Address = address.getText().toString();
+
+                HashMap<String,String> userMap = new HashMap<>();
+                userMap.put("Name", Name);
+                userMap.put("Address", Address);
+                userMap.put("Number", Number);
+
+                reference.push().setValue(userMap);
+            }
+        });
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
