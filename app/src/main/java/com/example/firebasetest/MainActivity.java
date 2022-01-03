@@ -55,32 +55,36 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        name = findViewById(R.id.nameEt);
-        number = findViewById(R.id.phoneEt);
-        address = findViewById(R.id.addressEt);
-        submit = findViewById(R.id.phoneContinueBtn);
+//        name = findViewById(R.id.nameEt);
+//        number = findViewById(R.id.phoneEt);
+//        address = findViewById(R.id.addressEt);
+//        submit = findViewById(R.id.phoneContinueBtn);
 
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String Name = name.getText().toString();
-                String Number = number.getText().toString();
-                String Address = address.getText().toString();
-
-                HashMap<String,String> userMap = new HashMap<>();
-                userMap.put("Name", Name);
-                userMap.put("Address", Address);
-                userMap.put("Number", Number);
-
-                reference.push().setValue(userMap);
-            }
-        });
+//        submit.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String Name = name.getText().toString();
+//                String Number = number.getText().toString();
+//                String Address = address.getText().toString();
+//
+//                HashMap<String,String> userMap = new HashMap<>();
+//                userMap.put("Name", Name);
+//                userMap.put("Address", Address);
+//                userMap.put("Number", Number);
+//
+//                reference.push().setValue(userMap);
+//                binding.phoneL1.setVisibility((View.GONE));
+//                binding.codeL1.setVisibility(View.GONE);
+//                binding.phoneContinueBtn.setVisibility(View.VISIBLE);
+//            }
+//        });
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         binding.phoneL1.setVisibility((View.VISIBLE));
         binding.codeL1.setVisibility(View.GONE);
+//        binding.phoneContinueBtn.setVisibility(View.GONE);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -131,7 +135,17 @@ public class MainActivity extends AppCompatActivity {
         binding.phoneContinueBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String phone = binding.phoneEt.getText().toString().trim();
+                String Name = binding.nameEt.getText().toString();
+                String Number = binding.phoneEt.getText().toString();
+                String Address = binding.addressEt.getText().toString();
+
+                HashMap<String,String> userMap = new HashMap<>();
+                userMap.put("Name", Name);
+                userMap.put("Address", Address);
+                userMap.put("Number", Number);
+
+                reference.push().setValue(userMap);
+                String phone = Number;
                 if(TextUtils.isEmpty(phone)){
                     Toast.makeText(MainActivity.this, "Please enter phone number", Toast.LENGTH_SHORT).show();
                 }
