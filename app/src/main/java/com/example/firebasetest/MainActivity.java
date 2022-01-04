@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends AppCompatActivity {
 
     EditText name,address,number;
-    Button submit;
+    Button test;
 
     FirebaseDatabase db = FirebaseDatabase.getInstance();
     DatabaseReference reference = db.getReference().child("Users");
@@ -58,24 +58,13 @@ public class MainActivity extends AppCompatActivity {
 //        name = findViewById(R.id.nameEt);
 //        number = findViewById(R.id.phoneEt);
 //        address = findViewById(R.id.addressEt);
-//        submit = findViewById(R.id.phoneContinueBtn);
+//        test = findViewById(R.id.test);
 
-//        submit.setOnClickListener(new View.OnClickListener() {
+//        binding.test.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                String Name = name.getText().toString();
-//                String Number = number.getText().toString();
-//                String Address = address.getText().toString();
-//
-//                HashMap<String,String> userMap = new HashMap<>();
-//                userMap.put("Name", Name);
-//                userMap.put("Address", Address);
-//                userMap.put("Number", Number);
-//
-//                reference.push().setValue(userMap);
-//                binding.phoneL1.setVisibility((View.GONE));
-//                binding.codeL1.setVisibility(View.GONE);
-//                binding.phoneContinueBtn.setVisibility(View.VISIBLE);
+//                Intent intent = new Intent(getApplicationContext(),Profile.class);
+//                startActivity(intent);
 //            }
 //        });
 
@@ -91,6 +80,13 @@ public class MainActivity extends AppCompatActivity {
         pd= new ProgressDialog(this);
         pd.setTitle("Please wait...");
         pd.setCanceledOnTouchOutside(false);
+
+        binding.test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(),Profile.class));
+            }
+        });
 
         nCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
@@ -135,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
         binding.phoneContinueBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String Name = binding.nameEt.getText().toString();
                 String Number = binding.phoneEt.getText().toString();
                 String Address = binding.addressEt.getText().toString();
@@ -144,14 +141,21 @@ public class MainActivity extends AppCompatActivity {
                 userMap.put("Address", Address);
                 userMap.put("Number", Number);
 
-                reference.push().setValue(userMap);
-                String phone = Number;
-                if(TextUtils.isEmpty(phone)){
-                    Toast.makeText(MainActivity.this, "Please enter phone number", Toast.LENGTH_SHORT).show();
+                if(Name.isEmpty()||Address.isEmpty()){
+                    Toast.makeText(getApplicationContext(), "All fields are mandatory!", Toast.LENGTH_SHORT).show();
                 }
-                else{
-                    startPhoneNumberVerification(phone);
+                else {
+
+                    String phone = Number;
+                    if(TextUtils.isEmpty(phone)){
+                        Toast.makeText(MainActivity.this, "Please enter valid Phone number", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        startPhoneNumberVerification(phone);
+                        reference.push().setValue(userMap);
+                    }
                 }
+
             }
         });
 
