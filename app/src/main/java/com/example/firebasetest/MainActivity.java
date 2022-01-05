@@ -55,18 +55,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        name = findViewById(R.id.nameEt);
-//        number = findViewById(R.id.phoneEt);
-//        address = findViewById(R.id.addressEt);
-//        test = findViewById(R.id.test);
-
-//        binding.test.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(getApplicationContext(),Profile.class);
-//                startActivity(intent);
-//            }
-//        });
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
